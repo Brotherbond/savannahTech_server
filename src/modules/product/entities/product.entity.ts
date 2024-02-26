@@ -7,7 +7,7 @@ import {
   BeforeInsert,
 } from 'typeorm';
 
-enum CommissionType {
+export enum CommissionType {
   Amount,
   Percentage,
 }
@@ -15,8 +15,8 @@ enum CommissionType {
 @Entity('products')
 export class Product {
   @ObjectIdColumn()
-  @Transform((params) => params.obj.id.toString())
-  id: ObjectId;
+  @Transform((params) => params.obj._id.toString())
+  _id: ObjectId;
 
   @Column()
   name: string;
@@ -27,7 +27,7 @@ export class Product {
   @Column()
   category: string;
 
-  @Column()
+  @Column('decimal', { precision: 10, scale: 2 })
   commission: number;
 
   @Column({ default: CommissionType.Percentage })
@@ -36,7 +36,7 @@ export class Product {
   @Column({ default: '$' })
   currency: string;
 
-  @Column()
+  @Column('decimal', { precision: 10, scale: 2 })
   price: number;
 
   @BeforeInsert()

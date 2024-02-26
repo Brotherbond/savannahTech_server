@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ObjectId as ObjectID } from 'mongodb';
 import { ObjectId, MongoRepository } from 'typeorm';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -20,17 +21,20 @@ export class ProductService {
     return this.productRepository.find();
   }
 
-  async findOne(id: ObjectId) {
+  async findOne(_id: ObjectId) {
     return await this.productRepository.findOne({
-      where: { id },
+      where: { _id: new ObjectID(_id) },
     });
   }
 
-  async update(id: ObjectId, updateDestinationDto: UpdateProductDto) {
-    return await this.productRepository.update(id, updateDestinationDto);
+  async update(_id: ObjectId, updateProductDto: UpdateProductDto) {
+    return await this.productRepository.update(
+      { _id: new ObjectID(_id) },
+      updateProductDto,
+    );
   }
 
-  async remove(id: ObjectId) {
-    return await this.productRepository.delete(id);
+  async remove(_id: ObjectId) {
+    return await this.productRepository.delete(new ObjectID(_id));
   }
 }

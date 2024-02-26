@@ -1,6 +1,6 @@
 ## Setup
 
-* Clone repository
+* Clone the repositories
 
 * copy / Rename the .env.example to .env in the root directory, as well as client, and server directories
 
