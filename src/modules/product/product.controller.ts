@@ -11,6 +11,7 @@ import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ObjectId } from 'typeorm';
+import { UpdateManyProductDto } from './dto/update-many-product.dto';
 
 @Controller('products')
 export class ProductController {
@@ -29,6 +30,11 @@ export class ProductController {
   @Get(':id')
   async findOne(@Param('id') id: ObjectId) {
     return this.productService.findOne(id);
+  }
+
+  @Patch('many')
+  async updateMany(@Body() updateManyProductDto: UpdateManyProductDto) {
+    return this.productService.updateMany(updateManyProductDto);
   }
 
   @Patch(':id')

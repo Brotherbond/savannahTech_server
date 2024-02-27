@@ -16,7 +16,7 @@ async function seed() {
 
     console.log('Seeding completed successfully.');
   } catch (error) {
-    // console.error('Error seeding data:', error);
+    console.error('Error seeding data:', error);
   }
 }
 

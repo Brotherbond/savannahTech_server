@@ -21,6 +21,11 @@ export class OrderController {
     return this.orderService.create(createOrderDto);
   }
 
+  @Post('many')
+  async createMany() {
+    return this.orderService.createMany();
+  }
+
   @Get()
   async findAll() {
     return this.orderService.findAll();

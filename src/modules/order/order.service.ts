@@ -17,6 +17,10 @@ export class OrderService {
     return await this.orderRepository.save(order);
   }
 
+  async createMany() {
+    return this.orderRepository.find();
+  }
+
   async findAll() {
     return this.orderRepository.find();
   }

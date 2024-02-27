@@ -5,6 +5,8 @@ import {
   ObjectId,
   ObjectIdColumn,
   BeforeInsert,
+  UpdateDateColumn,
+  CreateDateColumn,
 } from 'typeorm';
 
 export enum CommissionType {
@@ -38,6 +40,12 @@ export class Product {
 
   @Column('decimal', { precision: 10, scale: 2 })
   price: number;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 
   @BeforeInsert()
   setDefaultCommissionType() {
