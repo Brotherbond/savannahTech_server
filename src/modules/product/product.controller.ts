@@ -14,7 +14,7 @@ import { ObjectId } from 'typeorm';
 import { UpdateManyProductDto } from './dto/update-many-product.dto';
 import { ObjectIdPipe } from '@/core/pipes/object-id.pipe';
 
-@Controller('products')
+@Controller({ path: 'products', version: '1' })
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
@@ -40,14 +40,14 @@ export class ProductController {
 
   @Patch(':id')
   async update(
-    @Param('id') id: ObjectId,
+    @Param('id', ObjectIdPipe) id: ObjectId,
     @Body() updateProductDto: UpdateProductDto,
   ) {
     return this.productService.update(id, updateProductDto);
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: ObjectId) {
+  async remove(@Param('id', ObjectIdPipe) id: ObjectId) {
     return this.productService.remove(id);
   }
 }

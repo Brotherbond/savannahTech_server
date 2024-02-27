@@ -5,6 +5,7 @@ import { JwtService } from '@nestjs/jwt';
 import { UserService } from '@/modules/user/user.service';
 import { AuthDto } from './dto/auth.dto';
 import { UserDto } from '@/modules/user/dto/user.dto';
+import { ObjectId } from 'typeorm';
 
 @Injectable()
 export class AuthService {
@@ -13,6 +14,10 @@ export class AuthService {
     private readonly userService: UserService,
   ) {}
 
+  private async comparePassword(enteredPassword: string, dbPassword: string) {
+    return await bcrypt.compare(enteredPassword, dbPassword);
+  }
+
   public async create(user: UserDto) {
     const pass = await this.hashPassword(user.password);
     const newUser = await this.userService.create({ ...user, password: pass });
@@ -20,6 +25,17 @@ export class AuthService {
     return result;
   }
 
+  private async generateToken(user: {
+    name: string;
+    email: string;
+    id: ObjectId;
+  }) {
+    return await this.jwtService.signAsync(user);
+  }
+
+  private async hashPassword(password: string) {
+    return await bcrypt.hash(password, 10);
+  }
   public async login(user) {
     const {
       email,
@@ -38,20 +54,8 @@ export class AuthService {
     return true;
   }
 
-  private async comparePassword(enteredPassword: string, dbPassword: string) {
-    return await bcrypt.compare(enteredPassword, dbPassword);
-  }
-
-  private async hashPassword(password: string) {
-    return await bcrypt.hash(password, 10);
-  }
-
-  private async generateToken(user: {
-    name: string;
-    email: string;
-    id: string;
-  }) {
-    return await this.jwtService.signAsync(user);
+  public async refreshToken() {
+    return true;
   }
 
   async validateUser(user: AuthDto) {

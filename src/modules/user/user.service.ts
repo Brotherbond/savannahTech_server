@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ObjectId, MongoRepository } from 'typeorm';
+import { MongoRepository } from 'typeorm';
+import { ObjectId } from 'mongodb';
 import { User } from './entities/user.entity';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserDto } from './dto/user.dto';
@@ -24,9 +25,9 @@ export class UserService {
     return await this.userRepository.findOneBy({ where: { email } });
   }
 
-  async findOne(id: ObjectId) {
+  async findOne(_id: ObjectId) {
     return await this.userRepository.findOne({
-      where: { id },
+      where: { _id: new ObjectId(_id) },
     });
   }
 
@@ -35,6 +36,6 @@ export class UserService {
   }
 
   async remove(id: ObjectId) {
-    return await this.userRepository.delete(id);
+    return await this.userRepository.delete({ id });
   }
 }

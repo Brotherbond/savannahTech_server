@@ -6,7 +6,7 @@ import { DoesUserExist } from '@/core/guards/doesUserExist.guard';
 import { Request } from 'express';
 import { AuthDto } from './dto/auth.dto';
 
-@Controller('auth')
+@Controller({ path: 'auth', version: '1' })
 export class AuthController {
   constructor(private authService: AuthService) {}
 

@@ -16,8 +16,9 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { ObjectId } from 'typeorm';
 import { UserDto } from './dto/user.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { ObjectIdPipe } from '@/core/pipes/object-id.pipe';
 
-@Controller('users')
+@Controller({ path: 'users', version: '1' })
 @UseInterceptors(ClassSerializerInterceptor)
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -28,28 +29,27 @@ export class UserController {
   }
 
   @Get()
-  @UseGuards(AuthGuard('local'))
+  @UseGuards(AuthGuard('jwt'))
   async findAll(): Promise<User[]> {
-    return (await this.userService.findAll()).map((user) => new User(user));
+    return await this.userService.findAll();
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: ObjectId): Promise<User> {
-    return new User(await this.userService.findOne(id));
+  @UseGuards(AuthGuard('local'))
+  async findOne(@Param('id', ObjectIdPipe) id: ObjectId): Promise<User> {
+    return await this.userService.findOne(id);
   }
 
   @Patch(':id')
   async update(
-    @Param('id') id: ObjectId,
+    @Param('id', ObjectIdPipe) id: ObjectId,
     @Body() updateUserDto: UpdateUserDto,
   ) {
-    return new User(
-      (await this.userService.update(id, updateUserDto)) as Partial<User>,
-    );
+    return (await this.userService.update(id, updateUserDto)) as Partial<User>;
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: ObjectId) {
-    return new User((await this.userService.remove(id)) as Partial<User>);
+  async remove(@Param('id', ObjectIdPipe) id: ObjectId) {
+    return (await this.userService.remove(id)) as Partial<User>;
   }
 }
