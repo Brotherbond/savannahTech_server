@@ -1,4 +1,5 @@
 import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
+import { LoggerMiddleware } from 'nestjs-http-logger';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CorsMiddleware } from './cors.middleware';
@@ -53,8 +54,15 @@ import { OrderModule } from './modules/order/order.module';
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
+    const isProduction = process.env.NODE_ENV === 'production';
     consumer
       .apply(CorsMiddleware)
       .forRoutes({ path: '*', method: RequestMethod.ALL });
+    LoggerMiddleware.excludeFromRequest({
+      body: isProduction,
+      headers: isProduction,
+      cookies: isProduction,
+    });
+    // consumer.apply(LoggerMiddleware).forRoutes('*');
   }
 }

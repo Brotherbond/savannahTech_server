@@ -4,7 +4,7 @@ import { ObjectId } from 'typeorm';
 export class CreateOrderDto {
   customerName: string;
   staffID: ObjectId;
-  products: OrderProductDTO[];
+  product: OrderProductDTO[];
 }
 
 export class OrderProductDTO {

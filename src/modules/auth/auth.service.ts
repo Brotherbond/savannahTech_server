@@ -13,15 +13,10 @@ export class AuthService {
     private readonly userService: UserService,
   ) {}
 
-  async validateUser(user: AuthDto) {
-    const dbUser = await this.userService.findOneByEmail(user.email);
-
-    if (
-      !dbUser ||
-      !(await this.comparePassword(user.password, dbUser.password))
-    )
-      return null;
-    const { password, ...result } = dbUser;
+  public async create(user: UserDto) {
+    const pass = await this.hashPassword(user.password);
+    const newUser = await this.userService.create({ ...user, password: pass });
+    const { password, ...result } = newUser;
     return result;
   }
 
@@ -39,11 +34,16 @@ export class AuthService {
     return { user, token };
   }
 
-  public async create(user: UserDto) {
-    const pass = await this.hashPassword(user.password);
-    const newUser = await this.userService.create({ ...user, password: pass });
-    const { password, ...result } = newUser;
-    return result;
+  public async logout() {
+    return true;
+  }
+
+  private async comparePassword(enteredPassword: string, dbPassword: string) {
+    return await bcrypt.compare(enteredPassword, dbPassword);
+  }
+
+  private async hashPassword(password: string) {
+    return await bcrypt.hash(password, 10);
   }
 
   private async generateToken(user: {
@@ -54,11 +54,15 @@ export class AuthService {
     return await this.jwtService.signAsync(user);
   }
 
-  private async hashPassword(password: string) {
-    return await bcrypt.hash(password, 10);
-  }
+  async validateUser(user: AuthDto) {
+    const dbUser = await this.userService.findOneByEmail(user.email);
 
-  private async comparePassword(enteredPassword: string, dbPassword: string) {
-    return await bcrypt.compare(enteredPassword, dbPassword);
+    if (
+      !dbUser ||
+      !(await this.comparePassword(user.password, dbUser.password))
+    )
+      return null;
+    const { password, ...result } = dbUser;
+    return result;
   }
 }

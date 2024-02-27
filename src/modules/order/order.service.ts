@@ -17,21 +17,22 @@ export class OrderService {
     return await this.orderRepository.save(order);
   }
 
+  async createMany() {
+    return this.orderRepository.find();
+  }
+
   async findAll() {
     return this.orderRepository.find();
   }
 
   async findOne(_id: ObjectId) {
     return await this.orderRepository.findOne({
-      where: { _id: new ObjectID(_id) },
+      where: { _id },
     });
   }
 
   async update(_id: ObjectId, updateOrderDto: UpdateOrderDto) {
-    return await this.orderRepository.update(
-      { _id: new ObjectID(_id) },
-      updateOrderDto,
-    );
+    return await this.orderRepository.update({ _id }, updateOrderDto);
   }
 
   async remove(_id: ObjectId) {

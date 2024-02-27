@@ -10,10 +10,15 @@ import { AuthDto } from './dto/auth.dto';
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @UseGuards(AuthGuard('local'))
   @Post('login')
-  async login(@Req() req: Request<AuthDto>) {
-    return await this.authService.login(req.user);
+  async login(@Body() user: AuthDto) {
+    return await this.authService.login(user);
+  }
+
+  @UseGuards(AuthGuard('local'))
+  @Post('logout')
+  async logout(@Req() req: Request<AuthDto>) {
+    return await this.authService.logout();
   }
 
   @UseGuards(DoesUserExist)

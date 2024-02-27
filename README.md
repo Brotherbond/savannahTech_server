@@ -1,13 +1,15 @@
 ## Setup
 
-* Clone the repositories
+* https://github.com/Brotherbond/savannahTech_client.git
 
-* copy / Rename the .env.example to .env in the root directory, as well as client, and server directories
+* https://github.com/Brotherbond/savannahTech_server.git
 
-* Update the environment variables  in the .env files. Default provided
+* Clone the repositories above as client and  server respectively into one folder
 
-* Open a terminal from the root directory and run "docker compose up -d"
+* copy / Rename the .env.example to .env in the client, and server directories
 
-* run "pnpm seeding:products" to seed database inside the server container terminal
+* Update the environment variables  in the .env files as deem fit. Default provided
 
-* You need to create account then sign in to access the calculator on the dashboard at "/dashboard/calculator"
+* Open a terminal from the server directory and run "docker compose up -d"
+
+* inside the server container terminal, run "pnpm seeding:products" to seed database

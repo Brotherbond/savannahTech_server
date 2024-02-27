@@ -1,4 +1,4 @@
-import { Product } from '@/modules/product/entities/product.entity';
+import { Product } from '../../product/entities/product.entity';
 import { Transform } from 'class-transformer';
 import {
   Entity,
@@ -19,7 +19,7 @@ export class Order {
   @Column()
   customerName: string;
 
-  @Column()
+  @ObjectIdColumn()
   staffID: ObjectId;
 
   @ManyToOne(() => Product, { eager: true })
