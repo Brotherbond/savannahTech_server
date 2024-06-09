@@ -5,9 +5,9 @@ services:
       context: ../client
       dockerfile: Dockerfile
     ports:
-      - "${CLIENT_PORT:-3000}:3000"
+      - '${CLIENT_PORT:-3000}:3000'
     volumes:
-      - "../client:/app"
+      - '../client:/app'
     networks:
       - test
   server:
@@ -16,26 +16,39 @@ services:
       context: ./
       dockerfile: Dockerfile
     ports:
-      - "${SERVER_PORT:-4000}:3000"
+      - '${SERVER_PORT:-4000}:3000'
     volumes:
-      - "./:/app"
+      - './:/app'
     networks:
       - test
   mongo:
     image: mongo:latest
     container_name: "${APP_NAME:-'test'}_mongodb"
     ports:
-      - "${MONGODB_PORT:-27017}:27017"
+      - '${MONGODB_PORT:-27017}:27017'
     environment:
       MONGO_INITDB_ROOT_USERNAME: "${MONGO_INITDB_ROOT_USERNAME:-''}"
       MONGO_INITDB_ROOT_PASSWORD: "${MONGO_INITDB_ROOT_PASSWORD:-''}"
     volumes:
-      - test_mongodb-data:/data/db
+      - test_mongodb_data:/data/db
     networks:
       - test
+  redis:
+    image: 'redis'
+    ports:
+      - '${REDIS_PORT:-6379}:6379'
+    volumes:
+      - 'test_redis_data:/data'
+    networks:
+      - test
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      retries: 3
+      timeout: 5s
 networks:
   test:
     driver: bridge
 
 volumes:
-  test_mongodb-data:
+  test_mongodb_data:
+  test_redis_data:
